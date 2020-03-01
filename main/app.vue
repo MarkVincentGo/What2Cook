@@ -1,43 +1,56 @@
 <script>
+import Vue from 'vue';
 import axios from 'axios';
+import Input from './Input.vue';
+import Fridge from './Fridge.vue';
+
+Vue.component('input-bar', Input);
+Vue.component('fridge', Fridge);
+
 
 export default {
   data: () => ({
     intro: 'Please enter a food!',
     input: '',
-    id: 2,
-    fridge: [
-      { food: 'sleep', id: 1 },
-    ],
-    renderIntro: false,
+    id: 0,
+    fridge: [],
   }),
+  created() {
+    axios.get('/getAll')
+      .then((response) => {
+        this.fridge = response.data;
+      });
+  },
   methods: {
-    addToFridge: () => {
-      console.log(this.input)
-      this.fridge.push({ food: this.input, id: this.id += 1 });
-      this.input = '';
+    addToFridge(input) {
+      const vm = this;
+      vm.fridge.push(input);
+      axios.post('/add', this.fridge);
     },
   },
 };
 </script>
 
 <template>
-  <div>
-    <h1 v-html='intro'></h1>
-    <input class="enter-food form-control" placeholder="Enter food here..." v-model="input"/>
-    <button class="btn btn-primary" @click="addToFridge">Add</button>
-    <div class="testbox"></div>
+  <div class="main">
+    <h1 v-html="intro"></h1>
+    <fridge class="fridge"/>
+    <input-bar class="input" @add-to-fridge="addToFridge"/>
   </div>
 </template>
 
 <style scoped>
-  .testbox {
-    height: 40px;
-    width: 40px;
-    border: 1px solid black;
+  .main {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
   }
-  .enter-food {
-    width: 400px;
-    display: inline-block;
+  .fridge {
+    grid-column-start: 0;
+    grid-column-end: 1;
+  }
+  .input {
+    grid-column-start: 1;
+    grid-column-end: 2;
   }
 </style>
