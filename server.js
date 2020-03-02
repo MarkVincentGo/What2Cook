@@ -11,6 +11,18 @@ app.use(express.json());
 app.use(cors());
 
 let list = [];
+let foods = [
+  { ingredient: 'broccoli', image: 'broccoli.png' },
+  { ingredient: 'red onion', image: 'red_onion.png' },
+  { ingredient: 'cheese', image: '  swiss_cheese.png' },
+  { ingredient: 'carrots', image: 'carrots.png' },
+  { ingredient: 'milk', image: 'milk.png' },
+  { ingredient: 'butter', image: 'butter.png' },
+  { ingredient: 'grapes', image: 'grapes.png' },
+  { ingredient: 'potatoes', image: 'potatoes.png' },
+  { ingredient: 'salsa', image: 'salsa.png' },
+  { ingredient: 'chicken', image: 'chicken.png' },
+];
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -23,4 +35,15 @@ app.get('/getall', (req, res) => {
   res.send(list);
 });
 
-app.listen(port, console.log(`MVP running on port ${port}!!!`))
+app.get('/searchFood', (req, res) => {
+  const { search } = req.query;
+  const results = [];
+  for (let i = 0; i < foods.length; i += 1) {
+    if (foods[i].ingredient.indexOf(search) > -1) {
+      results.push(foods[i]);
+    }
+  }
+  res.send(results);
+});
+
+app.listen(port, console.log(`MVP running on port ${port}!!!`));
