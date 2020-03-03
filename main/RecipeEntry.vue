@@ -1,4 +1,6 @@
 <script>
+/* eslint-disable vue/require-v-for-key */
+
 export default {
   props: {
     recipe: { type: Object },
@@ -7,7 +9,10 @@ export default {
   }),
   methods: {
   },
-  template: `
+};
+</script>
+
+<template>
     <a class="recipe-entry" :href="recipe.url" target="_blank" draggable="false">
       <img class="food-image" :src="recipe.image"/>
       <div class="info-container">
@@ -40,15 +45,13 @@ export default {
         </div>
       </div>
     </a>
-`,
-};
-</script>
+</template>
 
 <style scoped>
   .recipe-entry {
-    height: 100px;
+    height: 150px;
     width: 100%;
-    box-shadow: 1px 0px 15px -2px rgba(153,153,153,0.98);
+    box-shadow: 1px 0px 15px -2px rgba(226,226,226,0.98);
     border-radius: 5px;
     margin-bottom: 15px;
     display: flex;
@@ -57,10 +60,10 @@ export default {
     cursor: pointer;
   }
   .recipe-entry:hover {
-    box-shadow: 3px 0px 20px -2px rgba(143, 143, 143, 0.98);
+    box-shadow: 3px 0px 20px -2px rgba(226,226,226, 0.98);
   }
   .recipe-entry:active {
-    box-shadow: 1px 0px 8px rgba(153,153,153,0.95);
+    box-shadow: 1px 0px 8px rgba(226,226,226,0.95);
   }
   .info-container {
     height: 100%;
@@ -69,6 +72,7 @@ export default {
     flex-direction: row;
     justify-content: space-around;
     overflow-x: scroll;
+    color: #e6e6e6;
   }
   .food-image {
     height: 80%;
@@ -84,7 +88,7 @@ export default {
     text-align: left;
   }
   .tags {
-    height: 80px;
+    height: 120px;
     overflow-y: scroll;
   }
   .header {
@@ -93,7 +97,7 @@ export default {
     text-decoration: underline;
   }
   .box {
-    width: 200px;
+    width: 20%;
   }
   .smaller {
     width: 150px;

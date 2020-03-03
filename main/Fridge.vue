@@ -3,25 +3,11 @@
 export default {
   props: {
     fridge: { type: Array },
+    whichPic: { type: Number },
   },
   data: () => ({
-    fridgePic: ['fridge-closed.png', 'fridge-open.png'],
-    whichPic: 0,
   }),
   methods: {
-    openClose(e) {
-      const vm = this;
-      vm.whichPic = vm.whichPic === 0 ? 1 : 0;
-      if (vm.whichPic === 0) {
-        e.target.childNodes.forEach((child) => {
-          child.style.display = 'none';
-        });
-      } else {
-        e.target.childNodes.forEach((child) => {
-          child.style.display = 'inline-block';
-        });
-      }
-    },
     dragStart(e) {
       const { target } = e;
       const targetCopy = target.cloneNode(true);
@@ -43,36 +29,66 @@ export default {
       }
       card.style.height = '80px';
       card.style.width = '80px';
-      e.target.appendChild(card);
+      if (e.target.tagName === 'DIV') {
+        e.target.appendChild(card);
+      } else if (e.target.tagName === 'A') {
+        e.target.parentNode.appendChild(card);
+      }
       vm.$emit('add-to-fridge', cardData.ingredient);
     },
   },
-  template: `
-    <div class="testbox" :style="'background-image: url(' + fridgePic[whichPic] + ')'" @click="openClose">
-      <div class="contents" id="fridge-board" @dragover.prevent @drop.prevent="drop">
-        <slot />
-      </div>
-    </div>
-  `,
 };
 </script>
 
+<template>
+  <div class="testbox" id="fridge-container">
+    <div class="fridge-text">Fridge</div>
+    <div class="contents" id="fridge-board" @dragover.prevent @drop.prevent="drop">
+      <div v-for="i in 4" class="shelf not-last" :id="`shelf-${i}`">
+        <slot />
+      </div>
+      <div class="shelf last" id="shelf-5">
+        <slot />
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
   .testbox {
-    height: 550px;
-    width: 400px;
-    margin: 0 auto 20px;
-    background-repeat: no-repeat;
-    background-size: auto 95%;
-    background-position: right bottom;
+    height: 100%;
+    width: 100%;
     position: relative;
   }
+  .fridge-text {
+    text-align: center;
+    width: auto;
+    font-size: 30px;
+    margin: 15px auto 0;
+    color: #e2e2e2;
+  }
   .contents {
-    height: 450px;
-    width: 225px;
-    position: absolute;
-    bottom: 40px;
-    right: 30px;
+    height: 500px;
+    width: 450px;
+    position: relative;
+    margin: 0 auto 40px;
+    border: 4px solid #e7e7e7;
+    border-radius: 40px;
     overflow-y: scroll;
+  }
+  .shelf {
+    height: 100px;
+    width: 400px;
+    padding: 10px 0 0 2em;
+    margin: 0 auto;
+  }
+  .not-last {
+    border-bottom: 4px solid #e7e7e7;
+  }
+  #shelf-1 {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
   }
 </style>
