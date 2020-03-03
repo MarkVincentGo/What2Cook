@@ -19,6 +19,7 @@ export default {
     id: 0,
     fridge: [],
     list: [],
+    recipes: [],
   }),
   created() {
     axios.get('/getAll')
@@ -34,31 +35,50 @@ export default {
         axios.post('/add', this.fridge);
       }
     },
+    removeFromFridge(input) {
+      const vm = this;
+      const inputIndex = vm.fridge.indexOf(input);
+      if (inputIndex > -1) {
+        vm.fridge.splice(inputIndex, 1);
+      }
+    },
     addToList(ingredients) {
       const vm = this;
       vm.list = ingredients;
     },
     searchRecipe() {
-      axios.get('/recipes', this.fridge);
-    }
+      const vm = this;
+      axios.get('/recipes', {
+        params: {
+          fridge: vm.fridge,
+        },
+      })
+        .then((response) => {
+          vm.recipes = response.data;
+        });
+    },
   },
 };
 </script>
 
 <template>
-   <div>
+   <div class="body">
     <h1 v-html="intro" class="header"></h1>
     <div class="main">
-      <fridge class="fridge" :fridge="fridge"/>
-      <button class="btn btn-primary recipe-search">Search Recipes!</button>
+      <fridge class="fridge" :fridge="fridge" @add-to-fridge="addToFridge"/>
+      <button class="btn btn-primary recipe-search" @click="searchRecipe">Search Recipes!</button>
       <input-bar class="input" @render-to-list="addToList"/>
       <ingredient-list class="ingredient-list" :list="list" @add-to-fridge="addToFridge"/>
-      <recipe-list class="recipe-list"/>
+      <recipe-list class="recipe-list" :recipes="recipes"/>
     </div>
   </div>
 </template>
 
 <style scoped>
+  @import url('https://fonts.googleapis.com/css?family=Montserrat');
+  .body {
+    font-family:'Montserrat',sans-serif;
+  }
   .main {
     width: 100%;
     display: grid;
@@ -96,5 +116,8 @@ export default {
   .recipe-list {
     grid-column-start: 1;
     grid-column-end: 3;
+  }
+  .header {
+    text-align: center;
   }
 </style>
