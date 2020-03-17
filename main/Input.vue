@@ -29,7 +29,7 @@ export default {
 
 <style scoped>
   .enter-food {
-    width: 80%;
+    width: 85%;
     border-radius: 0;
     display: inline-block;
     height: 50px;
